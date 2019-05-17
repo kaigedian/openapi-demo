@@ -15,6 +15,7 @@ find_package(OpenSSL)
 
 set(REA_TOOL_SOURCES
   RSATool.hpp
+  URLCode.hpp
   TestRSATool.cc
   )
 
