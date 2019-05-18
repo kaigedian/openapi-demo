@@ -132,7 +132,7 @@ public:
 		if (NULL == (sig = (unsigned char*)malloc(RSA_size(rsa)))) {  
 			RSA_free(rsa);  
 			return 0;  
-		}  
+        }
 
         SHA256((const unsigned char *)text, strlen(text), sha1);
         if (1 != RSA_sign(NID_sha256, sha1, 32, sig, &len, rsa)) {
@@ -142,7 +142,7 @@ public:
 			return 0;  
 		}  
 
-		if ((length= base64((char *)sig, 128, signature, size)) == 0) {  
+        if ((length= base64((char *)sig, len, signature, size)) == 0) {
 			free(sig);  
 			RSA_free(rsa);  
 			printf("base64 error.\n");  
@@ -164,7 +164,8 @@ public:
 	static int RSAVerify(const char *text,const char *signature, const char *public_key)  
 	{  
 		RSA *rsa;  
-		BIO* in = NULL;  
+        BIO* in = NULL;
+        int len = 0;
 		char * sig_debase = NULL;
         unsigned char sha1[32];
 
@@ -187,15 +188,15 @@ public:
 			return 0;  
 		}  
 
-		sig_debase = (char *)malloc(250 * sizeof(char));  
-		if (NULL == debase64(signature, strlen((char *)signature), sig_debase, 250)) {  
+        sig_debase = (char *)malloc(512 * sizeof(char));
+        if ((len = debase64(signature, strlen((char *)signature), sig_debase, 512)) == 0) {
 			RSA_free(rsa);  
 			printf("debase64 error.\n");  
 			return 0;  
 		}  
 
         SHA256((const unsigned char *)text, strlen(text), sha1);
-        if (1 != RSA_verify(NID_sha256, sha1, 32, (unsigned char *)sig_debase, 128, rsa)) {
+        if (1 != RSA_verify(NID_sha256, sha1, 32, (unsigned char *)sig_debase, len, rsa)) {
 			free(sig_debase);  
 			RSA_free(rsa);  
 			printf("RSA_verify error.\n");  
