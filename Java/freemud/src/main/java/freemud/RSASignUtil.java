@@ -120,7 +120,7 @@ public class RSASignUtil {
         //寰楀埌绉侀挜
         Key privateKey = keyPair.getPrivate();
         String privateKeyStr = (new BASE64Encoder()).encodeBuffer(privateKey.getEncoded());
-        Map<String, String> keyPairMap = new HashMap<>(2);
+        Map<String, String> keyPairMap = new HashMap<String, String>(2);
         keyPairMap.put(PUBLIC_KEY, publicKeyStr);
         keyPairMap.put(PRIVATE_KEY, privateKeyStr);
 
